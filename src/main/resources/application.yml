@@ -1,0 +1,42 @@
+server:
+  port: 8088
+  servlet:
+    #设置项目根路径
+    context-path: /community
+
+#关闭thymeleaf模板缓存
+spring:
+  thymeleaf:
+    cache: false
+#  profiles:
+#    # 选择环境
+#    active: @activatedProperties@
+  #配置数据库连接池
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong
+    username: root
+    password: root
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      idle-timeout: 30000
+
+#mybatis相关配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.nowcoder.community.entity
+  configuration:
+    #设置id主键自增
+    use-generated-keys: true
+    #数据库字段名称与类属性名称对应
+    map-underscore-to-camel-case: true
+#logger配置
+logging:
+  level:
+    com:
+      nowcoder:
+        community: debug
+  # 设置logback.xml位置
+  config: classpath:log/logback.xml
