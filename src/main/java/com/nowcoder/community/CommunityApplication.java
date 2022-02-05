@@ -6,10 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * 项目启动类
- * @author Administrator
+ * @author Alex
+ * @version 1.0
+ * @date 2022/2/1 15:15
  */
 @SpringBootApplication
-@MapperScan("com.nowcoder.community.dao")
 public class CommunityApplication {
 
     public static void main(String[] args) {

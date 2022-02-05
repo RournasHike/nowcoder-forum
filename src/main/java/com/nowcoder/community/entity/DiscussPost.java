@@ -16,7 +16,7 @@ public class DiscussPost {
      * 用户ID
      */
     @NotBlank
-    private String userId;
+    private int userId;
     @NotBlank
     private String title;
     /**
@@ -51,11 +51,11 @@ public class DiscussPost {
         this.id = id;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

@@ -22,6 +22,17 @@ spring:
       maximum-pool-size: 15
       minimum-idle: 5
       idle-timeout: 30000
+  mail:
+    host: smtp.sina.com
+    port: 465
+    username: alexlqx@sina.com
+    password: 65d0ee3a806ff5ff
+    protocol: smtps
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
 
 #mybatis相关配置
 mybatis:
@@ -39,4 +50,11 @@ logging:
       nowcoder:
         community: debug
   # 设置logback.xml位置
-  config: classpath:log/logback.xml
+  config: classpath:logback.xml
+  file:
+    name: D:\log\nowcoder\community.log
+
+# 自定义网站域名
+community:
+  path:
+    domain: http://localhost:8088/

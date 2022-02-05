@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Objects;
 
 /**
+ * 全局异常处理类
  * @author Alex
  * @version 1.0
  * @date 2022/1/30 18:15
@@ -36,7 +37,7 @@ public class GlobalExceptionResolver {
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(Exception.class)
     public ResultVo exception(Exception e) {
-        e.printStackTrace();
+        log.error("error log info:{}",e.getMessage());
         return ResultVoUtil.error(ResultEnum.UNKNOWN_EXCEPTION);
     }
 }
