@@ -33,6 +33,11 @@ spring:
         smtp:
           ssl:
             enable: true
+  #配置上传文件的大小
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 #mybatis相关配置
 mybatis:
@@ -57,4 +62,7 @@ logging:
 # 自定义网站域名
 community:
   path:
+#设置域名
     domain: http://localhost:8088/
+# 配置文件上传位置
+    upload: d:/work/data/upload
