@@ -25,14 +25,31 @@ public class DiscussPostService {
     @Autowired
     private SensitiveWordFilter sensitiveWordFilter;
 
+    /**
+     * 分页查询(用户)帖子列表
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return List<DiscussPost>
+     */
     public List<DiscussPost> findDiscussPostList(int userId,int offset,int limit) {
         return discussPostMapper.selectDiscussPostsByPage(userId,offset,limit);
     }
 
+    /**
+     * 根据用户id查询用户帖子总数
+     * @param userId
+     * @return
+     */
     public int findDiscussPostCount(int userId){
         return discussPostMapper.selectDiscussPostCount(userId);
     }
 
+    /**
+     * 添加帖子
+     * @param post
+     * @return int
+     */
     public int addDiscussPost(DiscussPost post){
         if (CommonUtil.isEmtpy(post)){
             throw new IllegalArgumentException("参数不能为空");
@@ -47,5 +64,14 @@ public class DiscussPostService {
         post.setContent(sensitiveWordFilter.filterSensitiveWords(post.getContent()));
 
         return discussPostMapper.insertDiscussPost(post);
+    }
+
+    /**
+     * 根据帖子id查询帖子信息
+     * @param id
+     * @return DiscussPost
+     */
+    public DiscussPost findDiscussPostById(int id){
+        return discussPostMapper.selDiscussPostById(id);
     }
 }

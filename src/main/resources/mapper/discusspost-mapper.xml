@@ -38,4 +38,12 @@
         insert into discuss_post(<include refid="insertFields"></include>)
         values (#{userId},#{title},#{content},#{type},#{status},#{createTime},#{commentCount},#{score})
     </insert>
+
+    <select id="selDiscussPostById" resultType="com.nowcoder.community.entity.DiscussPost">
+        select
+        <include refid="selectFields">
+        </include>
+        from discuss_post
+        where id = #{id}
+    </select>
 </mapper>
