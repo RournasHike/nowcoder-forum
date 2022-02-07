@@ -1,6 +1,5 @@
 package com.nowcoder.community.constant;
 
-import java.rmi.activation.ActivationID;
 
 /**
  * 用户账号激活状态

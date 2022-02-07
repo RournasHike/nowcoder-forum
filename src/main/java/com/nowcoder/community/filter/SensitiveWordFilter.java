@@ -1,6 +1,7 @@
 package com.nowcoder.community.filter;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -98,9 +99,54 @@ public class SensitiveWordFilter {
         StringBuilder sb = new StringBuilder();
         while (position<text.length()){
             char c = text.charAt(position);
+            // 跳过特殊符号
+            if(isSymbol(c)){
+                // 若指针1处于根节点，将此符号计入结果，让指针2向下走一步
+                if(tempNode == root){
+                    sb.append(c);
+                    begin++;
+                }
+                // 无论符号在开头或者中间，指针3都向下走一步
+                position++;
+                continue;
+            }
 
+            // 检查下级节点
+            tempNode = tempNode.getSubNode(c);
+            if(tempNode == null){
+                // 以begin开头的字符串不是敏感词
+                sb.append(text.charAt(begin));
+                // 进入下一个位置
+                position = ++begin;
+                // 指针1(树形指针)只想root节点
+                tempNode = root;
+            }else if(tempNode.isKeyWordEnd()){
+                // 发现敏感词,将begin~position的字符串替换掉
+                sb.append(REPLACEMENT);
+                // 进入下一个位置
+                begin = ++position;
+                // 重新执行根节点
+                tempNode = root;
+            }else{
+                // 检查下一个字符
+                position++;
+            }
         }
-        return null;
+
+        // 将最后一批字符计入结果
+        sb.append(text.substring(begin));
+        return sb.toString();
+    }
+
+    /**
+     * @Description 判断是否为符号
+     * @param c 传入字符
+     * @return  true/false
+     * @throws
+     */
+    private boolean isSymbol(Character c){
+        // 0x2E80~0x9FFF是东亚文字范围
+        return !CharUtils.isAsciiAlphanumeric(c) && (c < 0x2E80 || c > 0x9FFF);
     }
 
     /**

@@ -66,10 +66,14 @@ public class LoginInterceptor implements HandlerInterceptor {
                 User user = userService.findUserById(loginTicket.getUserId());
                 // 在本次请求中持有用户信息
                 userThreadLocalHolder.setCache(user);
-                log.info("{}用户登录成功,当前登录时间为{}",user.getUsername(),new Date());
+                log.info("{}用户登录成功,当前登录时间为{}",user.getUsername(),CommonUtil.getFormatDate(new Date()));
                 return true;
             }
         }
+
+        // 获取请求路径
+        String uri = request.getRequestURI();
+        log.info("当前请求路径为:{}",uri);
 
         // 登录拦截
         if (handler instanceof HandlerMethod) {

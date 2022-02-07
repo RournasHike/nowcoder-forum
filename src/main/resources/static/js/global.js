@@ -1,4 +1,5 @@
 var CONTEXT_PATH = "/community/user";
+var PROJECT_ROOT = "/community";
 window.alert = function(message) {
 	if(!$(".alert-box").length) {
 		$("body").append(

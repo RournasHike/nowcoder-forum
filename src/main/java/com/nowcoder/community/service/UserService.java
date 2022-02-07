@@ -107,7 +107,7 @@ public class UserService {
         Context context = new Context();
         context.setVariable("email",user.getEmail());
         // 设置邮件激活链接 http://localhost:8080/community/activation/{id}/{activationCode}
-        String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
+        String url = domain + contextPath + "/user/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url",url);
         String content = templateEngine.process("/mail/activation", context);
         mailClientConfig.sendMail(user.getEmail(),"激活账号",content);
