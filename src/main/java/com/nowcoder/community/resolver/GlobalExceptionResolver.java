@@ -26,18 +26,21 @@ public class GlobalExceptionResolver {
      * 自定义异常
      */
     @ExceptionHandler(value = CustomizeException.class)
-    public ResultVo processException(CustomizeException e) {
+    public ResultVo processCustomizeException(CustomizeException e) {
         log.error("位置:{} -> 错误信息:{}", e.getMethod() ,e.getLocalizedMessage());
         return ResultVoUtil.error(Objects.requireNonNull(ResultEnum.getByCode(e.getCode())));
-}
+    }
 
     /**
      * 通用异常
      */
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(Exception.class)
-    public String exception(Exception e) {
-        log.error("error log info:{}",e.getMessage());
-        return "/site/error/500";
+    public ResultVo handleException(Exception e) {
+        log.error("服务器异常:{}",e.getMessage());
+        for (StackTraceElement element : e.getStackTrace()){
+            log.error(element.toString());
+        }
+        return ResultVoUtil.error(ResultEnum.UNKNOWN_EXCEPTION);
     }
 }
