@@ -17,6 +17,11 @@ public class LoginTicketService {
     @Autowired
     private LoginTicketMapper loginTicketMapper;
 
+    /**
+     * 根据用户浏览器cookie携带的ticket查询用户登录凭证
+     * @param ticket
+     * @return
+     */
     public LoginTicket findLoginTicket(String ticket){
         return loginTicketMapper.selectByTicket(ticket);
     }

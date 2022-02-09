@@ -36,8 +36,8 @@ public class GlobalExceptionResolver {
      */
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(Exception.class)
-    public ResultVo exception(Exception e) {
+    public String exception(Exception e) {
         log.error("error log info:{}",e.getMessage());
-        return ResultVoUtil.error(ResultEnum.UNKNOWN_EXCEPTION);
+        return "/site/error/500";
     }
 }

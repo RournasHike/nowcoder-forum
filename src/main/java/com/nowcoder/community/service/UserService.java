@@ -46,12 +46,20 @@ public class UserService {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
-
-
+    /**
+     * 根据id查询用户信息
+     * @param id
+     * @return
+     */
     public User findUserById(int id){
         return userMapper.selectById(id);
     }
 
+    /**
+     * 注册用户
+     * @param user
+     * @return
+     */
     public Map<String,Object> register(User user){
         Map<String,Object> map = new HashMap<>();
         if(user==null){
@@ -114,6 +122,12 @@ public class UserService {
         return map;
     }
 
+    /**
+     * 激活账户
+     * @param userId
+     * @param code
+     * @return
+     */
     public int activation(int userId,String code){
         User user = userMapper.selectById(userId);
         if(user.getStatus() == 1){
@@ -127,6 +141,13 @@ public class UserService {
         }
     }
 
+    /**
+     * 用户登录
+     * @param username
+     * @param password
+     * @param expiredSeconds
+     * @return
+     */
     public Map<String, Object> login(String username,String password,int expiredSeconds){
         Map<String,Object> map = new HashMap<>();
 
@@ -173,12 +194,30 @@ public class UserService {
         return map;
     }
 
+    /**
+     * 退出登录
+     * @param ticket
+     */
     public void logout(String ticket){
         loginTicketMapper.updateStatus(ticket,1);
     }
 
+    /**
+     * 用户更新头像
+     * @param userId
+     * @param headerUrl
+     * @return
+     */
     public int updateHeader(int userId,String headerUrl){
         return userMapper.updateHeader(userId,headerUrl);
     }
 
+    /**
+     * 根据用户名查询用户信息
+     * @param username
+     * @return
+     */
+    public User findUserByUserName(String username){
+        return userMapper.selectByUserName(username);
+    }
 }

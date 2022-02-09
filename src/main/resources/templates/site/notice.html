@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en"xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -62,7 +62,7 @@
 		<!-- 内容 -->
 		<div class="main">
 			<div class="container">
-				<div class="position-relative">
+				<div class="position-relative" th:replace="letter::message-tab">
 					<!-- 选项 -->
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">

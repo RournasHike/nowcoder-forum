@@ -124,7 +124,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(path = "activation/{userId}/{code}",method = RequestMethod.GET)
+    @RequestMapping(path = "/activation/{userId}/{code}",method = RequestMethod.GET)
     public String activation(Model model, @PathVariable("userId") int userId,@PathVariable("code") String code){
         int activationResult = userService.activation(userId, code);
         if(activationResult == ActivationStatus.ACTIVATION_SUCCESS.getCode()){
@@ -205,6 +205,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "header/{fileName}",method = RequestMethod.GET)
+    @LoginRequired
     public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response){
         // 获取用户头像文件存放路径
         File file = new File(uploadPath + "/" + fileName);
