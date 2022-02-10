@@ -3,6 +3,7 @@ package com.nowcoder.community.service;
 import com.nowcoder.community.constant.CommentEntityConstant;
 import com.nowcoder.community.dao.CommentMapper;
 import com.nowcoder.community.entity.Comment;
+import com.nowcoder.community.entity.ReplyInfo;
 import com.nowcoder.community.filter.SensitiveWordFilter;
 import com.nowcoder.community.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +78,25 @@ public class CommentService {
         }
 
         return rows;
+    }
+
+    /**
+     * 根据用户id分页查询帖子回复列表
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    public List<ReplyInfo> findReplyInfoList(int userId,int offset,int limit){
+        return commentMapper.selectDiscussPostCommentByUserId(userId,offset,limit);
+    }
+
+    /**
+     * 根据用户id查询用户帖子回复总数
+     * @param userId
+     * @return
+     */
+    public int findReplyInfoCount(int userId){
+        return commentMapper.selectDiscussPostCommentCount(userId);
     }
 }

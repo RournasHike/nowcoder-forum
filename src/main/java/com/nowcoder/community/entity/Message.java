@@ -12,6 +12,7 @@ public class Message {
     private int id;
     /**
      * 发信人id
+     *      如果是系统发送通知，则fromId为1
      */
     private int fromId;
     /**
@@ -24,7 +25,8 @@ public class Message {
     private String conversationId;
     private String content;
     /**
-     * 状态：未读(0) 已读(1) 删除(2)
+     * 状态
+     *  0-未读;1-已读;2-删除;
      */
     private int status;
     private Date createTime;

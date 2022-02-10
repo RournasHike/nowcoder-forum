@@ -121,6 +121,7 @@ public class CommonUtil {
 
     }
 
+
     public static void main(String[] args) {
         Map<String, Object> map = new HashMap<>();
         map.put("name","zhangsan");

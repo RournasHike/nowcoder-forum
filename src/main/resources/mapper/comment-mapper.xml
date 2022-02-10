@@ -7,9 +7,25 @@
         id,user_id,entity_type,entity_id,target_id,content,status,create_time
     </sql>
 
+    <sql id="fieldsMap" >
+        c.id,c.user_id,entity_type,entity_id,target_id,c.content,c.status,c.create_time
+    </sql>
+
     <sql id="insertFields" >
         user_id,entity_type,entity_id,target_id,content,status,create_time
     </sql>
+
+    <resultMap id="discussPostCommentMap" type="com.nowcoder.community.entity.ReplyInfo">
+        <id column="id" jdbcType="INTEGER" javaType="int" property="id"></id>
+        <result column="user_id" jdbcType="INTEGER" javaType="int" property="userId"></result>
+        <result column="entity_type" jdbcType="INTEGER" javaType="int" property="entityType"></result>
+        <result column="entity_id" jdbcType="INTEGER" javaType="int" property="entityId"></result>
+        <result column="target_id" jdbcType="INTEGER" javaType="int" property="targetId"></result>
+        <result column="content" jdbcType="LONGNVARCHAR" javaType="string" property="content"></result>
+        <result column="status" jdbcType="INTEGER" javaType="int" property="status"></result>
+        <result column="create_time" jdbcType="TIMESTAMP" javaType="date" property="createTime"></result>
+        <result column="title" jdbcType="VARCHAR" javaType="string" property="title"></result>
+    </resultMap>
 
     <select id="selectCommentByEntity" resultType="com.nowcoder.community.entity.Comment">
         select
@@ -33,4 +49,21 @@
         values(#{userId},#{entityType},#{entityId},#{targetId},#{content},#{status},#{createTime})
     </insert>
 
+    <select id="selectDiscussPostCommentByUserId" resultMap="discussPostCommentMap">
+        select <include refid="fieldsMap"/>,d.title
+        from community.`comment` c
+        INNER JOIN community.discuss_post d
+        on c.entity_id=d.id
+        where c.user_id=#{userId}
+        order by create_time desc
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectDiscussPostCommentCount" resultType="int">
+        select count(c.id)
+        from community.`comment` c
+        INNER JOIN community.discuss_post d
+        on c.entity_id=d.id
+        where c.user_id=#{userId}
+    </select>
  </mapper>

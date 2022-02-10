@@ -63,4 +63,5 @@ public interface UserMapper {
      * @return
      */
     int updatePassword(int id,String password);
+
 }

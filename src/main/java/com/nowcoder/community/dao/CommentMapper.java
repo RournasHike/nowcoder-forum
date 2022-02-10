@@ -1,6 +1,7 @@
 package com.nowcoder.community.dao;
 
 import com.nowcoder.community.entity.Comment;
+import com.nowcoder.community.entity.ReplyInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -38,4 +39,21 @@ public interface CommentMapper {
      * @return
      */
     int insertComment(Comment comment);
+
+    /**
+     * 根据用户id查询帖子评论回复列表
+     * @param userId
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<ReplyInfo> selectDiscussPostCommentByUserId(int userId,int offset,int limit);
+
+    /**
+     * 根据用户id查询帖子评论回复总数
+     * @param userId
+     * @return
+     */
+    int selectDiscussPostCommentCount(int userId);
+
 }

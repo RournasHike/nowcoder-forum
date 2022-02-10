@@ -26,10 +26,12 @@ public class DiscussPost {
     private String content;
     /**
      * 帖子类型
+     *  0-普通; 1-置顶;
      */
     private int type;
     /**
      * 帖子状态
+     *  0-正常; 1-精华; 2-拉黑;
      */
     private int status;
     private Date createTime;

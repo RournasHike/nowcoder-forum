@@ -5,6 +5,7 @@ import com.nowcoder.community.constant.ActivationStatus;
 import com.nowcoder.community.dao.LoginTicketMapper;
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.LoginTicket;
+import com.nowcoder.community.entity.ReplyInfo;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 用户管理业务层
@@ -220,4 +218,14 @@ public class UserService {
     public User findUserByUserName(String username){
         return userMapper.selectByUserName(username);
     }
+
+    /**
+     * 更新用户密码
+     * @param user
+     * @return
+     */
+    public int updatePassword(User user){
+        return userMapper.updatePassword(user.getId(),user.getPassword());
+    }
+
 }

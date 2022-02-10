@@ -19,7 +19,8 @@ public class LoginTicket {
      */
     private String ticket;
     /**
-     * 用户登录状态 1 无效 / 0 有效
+     * 用户登录状态
+     *  0-有效; 1-无效;
      */
     private int status;
     /**

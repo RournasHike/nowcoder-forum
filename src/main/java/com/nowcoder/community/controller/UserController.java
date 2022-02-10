@@ -4,10 +4,15 @@ import com.google.code.kaptcha.Producer;
 import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.constant.ActivationStatus;
 import com.nowcoder.community.constant.LoginConstant;
+import com.nowcoder.community.entity.DiscussPost;
+import com.nowcoder.community.entity.ReplyInfo;
 import com.nowcoder.community.entity.User;
+import com.nowcoder.community.service.CommentService;
+import com.nowcoder.community.service.DiscussPostService;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommonUtil;
 import com.nowcoder.community.util.ThreadLocalHolder;
+import com.nowcoder.community.vo.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,6 +50,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DiscussPostService discussPostService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private Producer kaptchaProducer;
@@ -120,6 +132,7 @@ public class UserController {
             return "index";
         }
         userService.logout(ticket);
+        userThreadLocalHolder.clear();
         return "redirect:/user/loginPage";
     }
 
@@ -204,7 +217,7 @@ public class UserController {
         return "redirect:/index";
     }
 
-    @RequestMapping(path = "header/{fileName}",method = RequestMethod.GET)
+    @RequestMapping(path = "/header/{fileName}",method = RequestMethod.GET)
     @LoginRequired
     public void getHeader(@PathVariable("fileName") String fileName, HttpServletResponse response){
         // 获取用户头像文件存放路径
@@ -226,6 +239,89 @@ public class UserController {
         } catch (IOException e) {
             log.error("读取头像失败:{}",e.getMessage());
         }
+    }
+
+    @RequestMapping(path = "/profile",method = RequestMethod.GET)
+    @LoginRequired
+    public String getProfilePage(Model model){
+        User user = userThreadLocalHolder.getCache();
+        model.addAttribute("user",user);
+        return "/site/profile";
+    }
+
+    @RequestMapping(path = "/mypost",method = RequestMethod.GET)
+    @LoginRequired
+    public String getMyPostPage(Model model, PageInfo pageInfo){
+        // 获取当前登录用户信息
+        User user = userThreadLocalHolder.getCache();
+        int discussPostCount = discussPostService.findDiscussPostCount(user.getId());
+        model.addAttribute("discussPostCount",discussPostCount);
+
+        // 设置分页信息
+        pageInfo.setPath("/user/mypost");
+        pageInfo.setLimit(5);
+        pageInfo.setRows(discussPostCount);
+
+        // 查询帖子列表
+        List<DiscussPost> discussPosts = discussPostService.findDiscussPostList(user.getId(), pageInfo.getOffset(), pageInfo.getLimit());
+        model.addAttribute("discussPosts",discussPosts);
+        return "/site/my-post";
+    }
+
+    @RequestMapping(path = "/myreply",method = RequestMethod.GET)
+    @LoginRequired
+    public String getMyReplyPage(PageInfo pageInfo,Model model){
+
+        // 获取当前登录用户信息
+        User user = userThreadLocalHolder.getCache();
+        int replyInfoCount = commentService.findReplyInfoCount(user.getId());
+        model.addAttribute("replyInfoCount",replyInfoCount);
+
+        // 设置分页信息
+        pageInfo.setPath("/user/mypost");
+        pageInfo.setLimit(5);
+        pageInfo.setRows(replyInfoCount);
+
+        // 查询帖子回复列表
+        List<ReplyInfo> replyInfoList = commentService.findReplyInfoList(user.getId(), pageInfo.getOffset(), pageInfo.getLimit());
+        model.addAttribute("replyInfoList",replyInfoList);
+
+        return "/site/my-reply";
+    }
+
+    @RequestMapping(path = "/updatePassword",method = RequestMethod.POST)
+    @LoginRequired
+    public String updatePassword(String originPassword,String newPassword,String repeatPassword,Model model){
+        // 获取当前登录用户信息
+        User user = userThreadLocalHolder.getCache();
+        model.addAttribute("originPassword",originPassword);
+        model.addAttribute("newPassword",newPassword);
+        model.addAttribute("repeatPassword",repeatPassword);
+
+        // 密码信息校验
+        if(!CommonUtil.md5Encode(originPassword).equals(user.getPassword())){
+            model.addAttribute("errorMsg1","原密码错误");
+            return "site/setting";
+        }
+
+        if(CommonUtil.md5Encode(newPassword).equals(user.getPassword())){
+            model.addAttribute("errorMsg2","新密码不能与原密码一样");
+            return "site/setting";
+        }
+
+        if(!newPassword.equals(repeatPassword)){
+            model.addAttribute("errorMsg3","两次输入密码不一致");
+            return "site/setting";
+        }
+
+        user.setPassword(CommonUtil.md5Encode(newPassword));
+        int result = userService.updatePassword(user);
+        if(result<=0){
+            model.addAttribute("errorMsg","更新密码失败");
+            return "site/setting";
+        }
+
+        return "redirect:/index";
     }
 
 }

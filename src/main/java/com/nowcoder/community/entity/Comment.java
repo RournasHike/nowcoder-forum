@@ -16,6 +16,7 @@ public class Comment {
     private int userId;
     /**
      * 评论类型
+     *  1 对帖子的评论  2 对评论的评论
      */
     private int entityType;
     /**
@@ -23,7 +24,7 @@ public class Comment {
      */
     private int entityId;
     /**
-     * 评论目标id
+     * 评论目标id 对帖子评论的用户id
      */
     private int targetId;
     /**

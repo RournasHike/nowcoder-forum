@@ -60,17 +60,20 @@ mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '�
 
 ## 技术栈
 
-| 软件名称      | 描述         | 版本          |
-| ------------- | ------------ | ------------- |
-| Spring Boot   | 开源框架     | 2.3.0.RELEASE |
-| MyBatis       | ORM框架      |               |
-| MySQL         | 数据库       | 8.0.16        |
-| Kafka         | 消息中间件   |               |
-| Redis         | 缓存数据库   |               |
-| Git           | 版本控制工具 |               |
-| Elasticsearch | 搜索引擎     |               |
-| Thymeleaf     | 模板引擎     |               |
+| 软件名称        | 描述               | 版本          |
+| --------------- | ------------------ | ------------- |
+| Spring Boot     | 开源框架           | 2.3.0.RELEASE |
+| MyBatis         | ORM框架            |               |
+| MySQL           | 数据库             | 8.0.16        |
+| Kafka           | 消息中间件         |               |
+| Redis           | 缓存数据库         |               |
+| Git             | 版本控制工具       |               |
+| Elasticsearch   | 搜索引擎           |               |
+| Thymeleaf       | 模板引擎           |               |
+| bootstrap       | 页面框架           |               |
+| Jquery          | js框架             |               |
+| spring security | 安全认证框架       |               |
+| spring actuator | spring项目监控工具 |               |
 
 ## 功能概览
 
-短信验证登录功能：https://blog.csdn.net/weixin_44137464/article/details/106794221
