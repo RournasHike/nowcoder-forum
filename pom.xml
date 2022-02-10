@@ -25,12 +25,6 @@
   </properties>
 
   <dependencies>
-    <!--spring boot热部署-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <optional>true</optional>
-    </dependency>
 
     <!--spring aop-->
     <dependency>
@@ -52,6 +46,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
     <!--spring boot test-->
     <dependency>

@@ -60,20 +60,21 @@ mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '�
 
 ## 技术栈
 
-| 软件名称        | 描述               | 版本          |
-| --------------- | ------------------ | ------------- |
-| Spring Boot     | 开源框架           | 2.3.0.RELEASE |
-| MyBatis         | ORM框架            |               |
-| MySQL           | 数据库             | 8.0.16        |
-| Kafka           | 消息中间件         |               |
-| Redis           | 缓存数据库         |               |
-| Git             | 版本控制工具       |               |
-| Elasticsearch   | 搜索引擎           |               |
-| Thymeleaf       | 模板引擎           |               |
-| bootstrap       | 页面框架           |               |
-| Jquery          | js框架             |               |
-| spring security | 安全认证框架       |               |
-| spring actuator | spring项目监控工具 |               |
+| 软件名称        | 描述               | 版本             |
+| --------------- | ------------------ | ---------------- |
+| Spring Boot     | 开源框架           | 2.3.0.RELEASE    |
+| Spring Security | 安全认证框架       |                  |
+| Spring Actuator | spring项目监控工具 |                  |
+| swagger         | 接口文档生成工具   | 3.0.0            |
+| MyBatis         | ORM框架            | 2.0.1            |
+| MySQL           | 数据库             | 8.0.16           |
+| Kafka           | 消息中间件         |                  |
+| Redis           | 缓存数据库         | 3.0.504          |
+| Git             | 版本控制工具       | 2.20.0.windows.1 |
+| Elasticsearch   | 搜索引擎           |                  |
+| Thymeleaf       | 模板引擎           |                  |
+| bootstrap       | 页面框架           |                  |
+| Jquery          | js框架             |                  |
 
 ## 功能概览
 
