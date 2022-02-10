@@ -228,4 +228,28 @@ public class UserService {
         return userMapper.updatePassword(user.getId(),user.getPassword());
     }
 
+    /**
+     * 根据邮箱查询用户信息
+     * @param email
+     * @return
+     */
+    public User findUserByEmail(String email){
+        return userMapper.selectByEmail(email);
+    }
+
+    /**
+     * 忘记密码-向用户邮箱发送验证码邮件
+     * @param verifyCode
+     * @param email
+     */
+    public void sendVerifyEmail(String verifyCode,String email){
+        Context context = new Context();
+        // 设置动态html邮件变量
+        context.setVariable("email",email);
+        context.setVariable("verifyCode",verifyCode);
+        // 生成邮件内容
+        String content = templateEngine.process("/mail/forget", context);
+        mailClientConfig.sendMail(email,"重置密码验证码",content);
+    }
+
 }

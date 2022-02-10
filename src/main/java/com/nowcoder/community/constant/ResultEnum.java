@@ -13,6 +13,11 @@ public enum ResultEnum {
     SUCCESS(200,"操作成功"),
 
     /**
+     * 邮箱为空或不存在
+     */
+    EMAIL_NOT_EXIST(101,"邮箱为空或不存在"),
+
+    /**
      * 未知异常
      */
     UNKNOWN_EXCEPTION(100, "未知异常"),

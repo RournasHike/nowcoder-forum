@@ -32,3 +32,9 @@ window.alert = function(message) {
 	$(".alert-box .modal-body p").text(message);
 	$(".alert-box").modal("show");
 }
+
+function refreshImage(){
+	var path = CONTEXT_PATH + "/kaptcha?p="+Math.random();
+	$("#kaptcha").attr("src",path);
+}
+

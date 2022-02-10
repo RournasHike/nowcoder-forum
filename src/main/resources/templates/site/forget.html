@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-	<link rel="stylesheet" href="../css/global.css" />
-	<link rel="stylesheet" href="../css/login.css" />
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
 	<title>牛客网-忘记密码</title>
 </head>
 <body>
 	<div class="nk-container">
 		<!-- 头部 -->
-		<header class="bg-dark sticky-top">
+		<header class="bg-dark sticky-top" th:replace="index::header">
 			<div class="container">
 				<!-- 导航 -->
 				<nav class="navbar navbar-expand-lg navbar-dark">
@@ -62,12 +62,12 @@
 		<!-- 内容 -->
 		<div class="main">
 			<div class="container pl-5 pr-5 pt-3 pb-3 mt-3 mb-3">
-				<form class="mt-5">				
+				<form class="mt-5" method="post" th:action="@{/user/forgetPwd}">
 					<div class="form-group row">
 						<label for="your-email" class="col-sm-2 col-form-label text-right">邮箱:</label>
 						<div class="col-sm-10">
-							<input type="email" class="form-control" id="your-email" placeholder="请输入您的邮箱!" required>
-							<div class="invalid-feedback">
+							<input type="email" th:class="|form-control ${emailMsg!=null?'is-invalid':''}|" id="your-email" name="email" th:value="${email}" placeholder="请输入您的邮箱!">
+							<div class="invalid-feedback" th:text="${emailMsg}">
 								该邮箱已被注册!
 							</div>
 						</div>
@@ -75,22 +75,25 @@
 					<div class="form-group row mt-4">
 						<label for="verifycode" class="col-sm-2 col-form-label text-right">验证码:</label>
 						<div class="col-sm-6">
-							<input type="text" class="form-control" id="verifycode" placeholder="请输入验证码!">
-							<div class="invalid-feedback">
+							<input type="text" th:class="|form-control ${verifyCode!=null?'is-invalid':''}|" id="verifycode" name="verifyCode" placeholder="请输入验证码!">
+							<div class="invalid-feedback" th:text="${verifyCodeMsg}">
 								验证码不正确!
 							</div>
 						</div>
 						<div class="col-sm-4">
-							<a href="javascript:;" class="btn btn-info form-control">获取验证码</a>
+							<button type="button" class="btn btn-info form-control" onclick="getCode(this)">获取验证码</button>
 						</div>
 					</div>	
 					<div class="form-group row mt-4">
 						<label for="your-password" class="col-sm-2 col-form-label text-right">新密码:</label>
 						<div class="col-sm-10">
-							<input type="password" class="form-control" id="your-password" placeholder="请输入新的密码!" required>
-							<div class="invalid-feedback">
+							<input type="password" th:class="|form-control ${verifyCode!=null?'is-invalid':''}|" id="your-password" name="newPassword" th:value="${newPassword}" placeholder="请输入新的密码!">
+							<div class="invalid-feedback" th:text="${passwordMsg}">
 								密码长度不能小于8位!
 							</div>							
+						</div>
+						<div th:text="${errorMsg}">
+							密码长度不能小于8位!
 						</div>
 					</div>							
 					<div class="form-group row mt-4">
@@ -169,6 +172,58 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="../js/global.js"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script>
+		let time = 60;
+		//倒计时对象
+		let t;
+
+		function isEmail (s) {
+			return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(s)
+		}
+
+		function getCode(e){
+			let path = CONTEXT_PATH + "/emailVerify";
+			let email = $("#your-email").val();
+			if(email.length === 0){
+				alert("请输入邮箱");
+			}else{
+				if(!isEmail(email)){
+					alert("邮箱格式不正确");
+				}else{
+					//调用获取验证码的接口
+					$.post(path
+							, {"email":email, "p":Math.random()}
+							, function (data) {
+								//按照指定的周期（以毫秒计）来调用函数或计算表达式。
+								//最好是在ajax请求之后再调用函数
+								t = setInterval(function () {
+									countdown(e)
+								}, 1000)
+								alert("获取验证码成功");
+								//获取验证码成功后调用倒计时函数
+								countdown(e);
+							}
+					);
+
+				}
+			}
+		}
+
+		function countdown(e){
+			if (time == 0) {
+				//这里时设置当时间到0的时候重新设置点击事件，并且默认time修改为60
+				e.setAttribute("onclick","getcode(this)");
+				document.getElementById("getcode").innerText="获取验证码";
+				time = 60;
+				clearInterval(t);
+			}else{
+				//这里是显示时间倒计时的时候点击不生效
+				e.setAttribute("onclick", '');
+				document.getElementById("getcode").innerHTML="重新发送"+time;
+				time--;
+			}
+		}
+	</script>
 </body>
 </html>

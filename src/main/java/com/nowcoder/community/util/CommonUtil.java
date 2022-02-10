@@ -129,5 +129,6 @@ public class CommonUtil {
         System.out.println(getJsonString(0,"操作成功",map));
 
         System.out.println(getFormatDate(new Date()));
+        System.out.println(generateUUID().substring(0,6));
     }
 }

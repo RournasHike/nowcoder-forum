@@ -4,9 +4,12 @@ import com.google.code.kaptcha.Producer;
 import com.nowcoder.community.annotation.LoginRequired;
 import com.nowcoder.community.constant.ActivationStatus;
 import com.nowcoder.community.constant.LoginConstant;
+import com.nowcoder.community.constant.ResultEnum;
+import com.nowcoder.community.constant.SysEmailConstant;
 import com.nowcoder.community.entity.DiscussPost;
 import com.nowcoder.community.entity.ReplyInfo;
 import com.nowcoder.community.entity.User;
+import com.nowcoder.community.exception.CustomizeException;
 import com.nowcoder.community.service.CommentService;
 import com.nowcoder.community.service.DiscussPostService;
 import com.nowcoder.community.service.UserService;
@@ -81,6 +84,11 @@ public class UserController {
     @RequestMapping(path = "registerPage",method = RequestMethod.GET)
     public String registerPage(){
         return "site/register";
+    }
+
+    @RequestMapping(path = "forgetPwdPage",method = RequestMethod.GET)
+    public String forgetPwdPage(){
+        return "/site/forget";
     }
 
     @RequestMapping(path = "register", method = RequestMethod.POST)
@@ -225,7 +233,7 @@ public class UserController {
         // 文件后缀
         String suffix = fileName.substring(fileName.lastIndexOf("."));
 
-        //响应图片
+        // 响应图片
         response.setContentType("img/"+suffix);
 
         try (OutputStream os = response.getOutputStream();
@@ -322,6 +330,81 @@ public class UserController {
         }
 
         return "redirect:/index";
+    }
+
+    @RequestMapping(path = "/forgetPwd",method = RequestMethod.POST)
+    public String forgetPwd(Model model,String email,String verifyCode,String newPassword,HttpSession session,@CookieValue String verifyEmail){
+        // 非空校验
+        if(StringUtils.isBlank(email)){
+            model.addAttribute("emailMsg","邮箱为空");
+            return "/site/forget";
+        }
+        if(StringUtils.isBlank(verifyCode)){
+            model.addAttribute("verifyCodeMsg","验证码为空");
+            return "/site/forget";
+        }
+        if(StringUtils.isBlank(newPassword)){
+            model.addAttribute("passwordMsg","密码为空");
+            return "/site/forget";
+        }
+
+        model.addAttribute("email",email);
+        model.addAttribute("verifyCode",verifyCode);
+        model.addAttribute("newPassword",newPassword);
+
+        // 检查验证码
+        String emailVerifyCode = (String) session.getAttribute("verifyCode");
+        if(StringUtils.isBlank(emailVerifyCode)||StringUtils.isBlank(emailVerifyCode)||!verifyCode.equalsIgnoreCase(emailVerifyCode)){
+            model.addAttribute("verifyCodeMsg","验证码不正确");
+            return "/site/forget";
+        }
+
+        if(CommonUtil.isEmtpy(verifyEmail)){
+            model.addAttribute("verifyCodeMsg","验证码超时");
+            return "/site/forget";
+        }
+
+        //验证邮箱
+        User user = userService.findUserByEmail(email);
+        if(CommonUtil.isEmtpy(user)){
+            model.addAttribute("emailMsg","邮箱不存在");
+            return "/site/forget";
+        }else{
+            // 检查密码
+            if(CommonUtil.md5Encode(newPassword).equals(user.getPassword())){
+                model.addAttribute("passwordMsg","新密码不能和原密码一致");
+                return "/site/forget";
+            }else{
+                // 执行插入操作
+                user.setPassword(CommonUtil.md5Encode(newPassword));
+                int result = userService.updatePassword(user);
+                if(result<=0){
+                    model.addAttribute("errorMsg","重置密码失败!");
+                    return "/site/forget";
+                }
+            }
+        }
+        return "/site/login";
+    }
+
+    @RequestMapping(path = "/emailVerify",method = RequestMethod.POST)
+    public void emailVerify(HttpSession session,String email,HttpServletResponse response){
+        String verifyCode = CommonUtil.generateUUID().substring(0, 6);
+        session.setAttribute("verifyCode",verifyCode);
+
+        if(CommonUtil.isEmtpy(email)){
+            throw new CustomizeException(ResultEnum.EMAIL_NOT_EXIST,"emailVerify()");
+        }
+        // 调用service发送验证码邮件
+        userService.sendVerifyEmail(verifyCode,email);
+
+        // 生成一个cookie，用于判断验证码是否失效
+        Cookie cookie = new Cookie("verifyEmail", CommonUtil.generateUUID());
+        cookie.setPath(contextPath);
+        cookie.setDomain(domain);
+        cookie.setMaxAge(SysEmailConstant.EMAIL_VERIFYCODE_EXPIRED.getSec());
+
+        response.addCookie(cookie);
     }
 
 }
